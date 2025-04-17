@@ -344,7 +344,7 @@
                         </p>
                     </div>
                     <div class="qr-container">
-                        <div id="momoQRCode" class="qr-code"></div>
+                        <div id="momoQR" class="qr-code"></div>
                         <div class="qr-amount">
                             Quét mã để thanh toán<br>
                             <span id="momoQRAmount">0 VND</span>
@@ -362,66 +362,55 @@
             </div>
         </div>
 
-        <div class="text-center back-to-home mt-4">
+        <div class="text-center back-to-home mt-4 mb-4">
             <a href="index.html" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> Quay lại trang chủ
             </a>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-dark text-light mt-5 py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Về chúng tôi</h5>
+                    <p>Cung cấp các dịch vụ MMO uy tín, chất lượng với giá cả hợp lý.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Liên hệ</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-phone text-success me-2"></i>
+                            Hotline: <a href="tel:0363254644" class="text-light text-decoration-none">0363254644</a>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-envelope text-success me-2"></i>
+                            Email: <a href="mailto:nhimhung412@gmail.com" class="text-light text-decoration-none">nhimhung412@gmail.com</a>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-clock text-success me-2"></i>
+                            Giờ làm việc: 24/7
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Theo dõi chúng tôi</h5>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">© 2024 MMO Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Generate QR codes
-        function generateQRCodes(amount) {
-            // Momo QR Code
-            const momoQRContainer = document.getElementById('momoQRCode');
-            momoQRContainer.innerHTML = '';
-            
-            // Format Momo QR data according to their official format
-            const momoData = {
-                phoneNumber: "0363254644",
-                name: "NGUYEN THE HUY",
-                amount: amount,
-                message: "THANHTOAN"
-            };
-            
-            // Create Momo QR image using their API
-            const momoQRImage = document.createElement('img');
-            momoQRImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=2|99|${momoData.phoneNumber}|${momoData.name}|${momoData.message}|0|0|${momoData.amount}`;
-            momoQRImage.alt = "Momo QR Code";
-            momoQRImage.style.width = "200px";
-            momoQRImage.style.height = "200px";
-            
-            // Clear and append the image
-            momoQRContainer.innerHTML = '';
-            momoQRContainer.appendChild(momoQRImage);
-
-            // Bank QR Code
-            const bankQRContainer = document.getElementById('bankQR');
-            bankQRContainer.innerHTML = '';
-            
-            // Format bank QR data using VietQR format
-            const bankData = {
-                bank: "970422", // MB Bank BIN code
-                account: "69069696969",
-                name: "NGUYEN THE HUY",
-                amount: amount,
-                message: "THANHTOAN"
-            };
-
-            // Create an image element for the VietQR code
-            const bankQRImage = document.createElement('img');
-            bankQRImage.src = `https://api.vietqr.io/image/${bankData.bank}-${bankData.account}-compact.jpg?amount=${bankData.amount}&addInfo=${bankData.message}&accountName=${encodeURIComponent(bankData.name)}`;
-            bankQRImage.alt = "MB Bank QR Code";
-            bankQRImage.style.width = "200px";
-            bankQRImage.style.height = "200px";
-            
-            // Clear and append the image
-            bankQRContainer.innerHTML = '';
-            bankQRContainer.appendChild(bankQRImage);
-        }
-
-        // Update payment information and QR codes
+        // Update payment information and generate QR codes
         function updatePaymentInfo() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -440,15 +429,56 @@
                 document.getElementById(id).textContent = formattedTotal;
             });
 
-            // Generate QR codes with new amount
+            // Generate QR codes
             generateQRCodes(total);
+        }
+
+        // Generate QR codes
+        function generateQRCodes(amount) {
+            // Bank QR Code
+            const bankQRContainer = document.getElementById('bankQR');
+            const bankData = {
+                bank: "970422", // MB Bank BIN code
+                account: "69069696969",
+                name: "NGUYEN THE HUY",
+                amount: amount,
+                message: "THANHTOAN"
+            };
+
+            // Create bank QR image
+            const bankQRImage = document.createElement('img');
+            bankQRImage.src = `https://api.vietqr.io/image/${bankData.bank}-${bankData.account}-compact.jpg?amount=${bankData.amount}&addInfo=${bankData.message}&accountName=${encodeURIComponent(bankData.name)}`;
+            bankQRImage.alt = "MB Bank QR Code";
+            bankQRImage.style.width = "200px";
+            bankQRImage.style.height = "200px";
+            
+            bankQRContainer.innerHTML = '';
+            bankQRContainer.appendChild(bankQRImage);
+
+            // Momo QR Code
+            const momoQRContainer = document.getElementById('momoQR');
+            const momoData = {
+                phoneNumber: "0363254644",
+                name: "NGUYEN THE HUY",
+                amount: amount,
+                message: "THANHTOAN"
+            };
+
+            // Create Momo QR image
+            const momoQRImage = document.createElement('img');
+            momoQRImage.src = `https://momosv3.apimienphi.com/api/QRCode?phone=${momoData.phoneNumber}&amount=${momoData.amount}`;
+            momoQRImage.alt = "Momo QR Code";
+            momoQRImage.style.width = "200px";
+            momoQRImage.style.height = "200px";
+            
+            momoQRContainer.innerHTML = '';
+            momoQRContainer.appendChild(momoQRImage);
         }
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const orderItems = document.getElementById('orderItems');
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
             // Display order items
             orderItems.innerHTML = cart.map(item => `
@@ -469,6 +499,7 @@
             }
         });
 
+        // Copy to clipboard function
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
             const text = element.textContent;
@@ -480,6 +511,7 @@
             });
         }
 
+        // Show toast notification
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast position-fixed bottom-0 end-0 m-3';
